@@ -1,34 +1,50 @@
 <script setup>
+import {ref} from 'vue';
+import TransactionForm from "@/components/TransactionForm.vue";
+import TransactionTable from "@/components/TransactionTable.vue";
+
+const transactions = ref([
+  {id: 1, originAccount: '123456', destinationAccount: '654321', amount: 100.00, date: '2022-01-01'},
+  {
+    id: 2,
+    originAccount: '123456123456123456123456123456123456123456123456',
+    destinationAccount: '654322',
+    amount: 200.00,
+    date: '2022-01-02'
+  }
+]);
+
+function createTransaction(newTransaction) {
+  transactions.value.push({...newTransaction, id: transactions.value.length + 1});
+}
 </script>
 
 <template>
-  <header>
-    <div class="wrapper">
-      <h1>Header</h1>
-    </div>
-  </header>
-
   <main>
-    <h2>Main</h2>
+    <TransactionForm @create="createTransaction"/>
+    <TransactionTable :transactions="transactions"/>
   </main>
 </template>
-
-<style scoped>
-header {
-  line-height: 1.5;
+<style>
+* {
+  color-scheme: dark;
 }
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 2em
 }
 </style>
