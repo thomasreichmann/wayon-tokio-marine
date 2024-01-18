@@ -15,6 +15,7 @@ defineProps({
       <th>Destination Account</th>
       <th>Amount</th>
       <th>Date</th>
+      <th>Fee</th>
     </tr>
     </thead>
     <tbody>
@@ -22,8 +23,9 @@ defineProps({
       <td>{{ transaction.id }}</td>
       <td>{{ transaction.originAccount }}</td>
       <td>{{ transaction.destinationAccount }}</td>
-      <td>{{ transaction.amount }}</td>
-      <td>{{ transaction.date }}</td>
+      <td>R$ {{ transaction.amount }}</td>
+      <td>{{ transaction.transferDate }}</td>
+      <td>R$ {{ transaction.fee }}</td>
     </tr>
     </tbody>
   </table>

@@ -1,22 +1,46 @@
 <script setup>
-import {ref} from 'vue';
 import TransactionForm from "@/components/TransactionForm.vue";
+import {onMounted, ref} from "vue";
 import TransactionTable from "@/components/TransactionTable.vue";
 
-const transactions = ref([
-  {id: 1, originAccount: '123456', destinationAccount: '654321', amount: 100.00, date: '2022-01-01'},
-  {
-    id: 2,
-    originAccount: '123456123456123456123456123456123456123456123456',
-    destinationAccount: '654322',
-    amount: 200.00,
-    date: '2022-01-02'
-  }
-]);
+const transactions = ref([]);
 
-function createTransaction(newTransaction) {
-  transactions.value.push({...newTransaction, id: transactions.value.length + 1});
+async function fetchTransactions() {
+  try {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/transactions`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch transactions');
+    }
+
+    const data = await response.json()
+
+    transactions.value = data.content;
+  } catch (error) {
+    console.error('Error fetching transactions:', error);
+  }
 }
+
+async function createTransaction(newTransaction) {
+  try {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/transactions`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(newTransaction)
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to create transaction');
+    }
+
+    await fetchTransactions();
+  } catch (error) {
+    console.error('Error creating transaction:', error);
+  }
+}
+
+onMounted(fetchTransactions)
 </script>
 
 <template>

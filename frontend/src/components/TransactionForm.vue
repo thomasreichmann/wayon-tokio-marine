@@ -7,7 +7,7 @@ const transaction = ref({
   originAccount: '',
   destinationAccount: '',
   amount: null,
-  date: ''
+  transferDate: ''
 });
 
 function submitForm() {
@@ -21,7 +21,7 @@ function submitForm() {
     <input v-model="transaction.originAccount" type="text" placeholder="Origin Account" required>
     <input v-model="transaction.destinationAccount" type="text" placeholder="Destination Account" required>
     <input v-model="transaction.amount" type="number" placeholder="Amount" required>
-    <input v-model="transaction.date" type="date" placeholder="Date" required>
+    <input v-model="transaction.transferDate" type="date" placeholder="Date" required>
     <button type="submit">Create Transaction</button>
   </form>
 </template>
