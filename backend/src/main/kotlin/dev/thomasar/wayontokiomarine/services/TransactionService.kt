@@ -1,9 +1,11 @@
 package dev.thomasar.wayontokiomarine.services
 
 import dev.thomasar.wayontokiomarine.exceptions.NoApplicableFeeException
-import dev.thomasar.wayontokiomarine.model.Transaction
+import dev.thomasar.wayontokiomarine.models.Transaction
 import dev.thomasar.wayontokiomarine.repositories.TransactionRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -11,6 +13,10 @@ import java.time.temporal.ChronoUnit
 
 @Service
 class TransactionService @Autowired constructor(val transactionRepository: TransactionRepository) {
+    fun getTransactions(page: Int = 0, size: Int = 10): Page<Transaction> {
+        return transactionRepository.findAll(PageRequest.of(page, size))
+    }
+
     fun createTransaction(originAccount: String, destinationAccount: String, amount: BigDecimal, transferDate: LocalDate): Transaction {
         val schedulingDate = LocalDate.now()
         val transaction = Transaction(null, originAccount, destinationAccount, amount, transferDate, schedulingDate)

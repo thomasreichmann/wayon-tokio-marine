@@ -1,6 +1,6 @@
 package dev.thomasar.wayontokiomarine.services
 
-import dev.thomasar.wayontokiomarine.model.Transaction
+import dev.thomasar.wayontokiomarine.models.Transaction
 import dev.thomasar.wayontokiomarine.repositories.TransactionRepository
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach

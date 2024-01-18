@@ -1,4 +1,4 @@
-package dev.thomasar.wayontokiomarine.model
+package dev.thomasar.wayontokiomarine.models
 
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
