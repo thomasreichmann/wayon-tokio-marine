@@ -1,6 +1,7 @@
 package dev.thomasar.wayontokiomarine.controllers
 
 import dev.thomasar.wayontokiomarine.dtos.TransactionDto
+import dev.thomasar.wayontokiomarine.exceptions.NoApplicableFeeException
 import dev.thomasar.wayontokiomarine.models.Transaction
 import dev.thomasar.wayontokiomarine.services.TransactionService
 import org.springframework.beans.factory.annotation.Autowired
@@ -8,6 +9,8 @@ import org.springframework.data.domain.Page
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.client.HttpServerErrorException.InternalServerError
+import org.springframework.web.server.ResponseStatusException
 
 
 @RestController
@@ -36,5 +39,10 @@ class TransactionController @Autowired constructor(
             transactionDto.transferDate
         )
         return ResponseEntity(transaction, HttpStatus.CREATED)
+    }
+
+    @ExceptionHandler(NoApplicableFeeException::class)
+    fun handleResponseStatusException(e: NoApplicableFeeException): ResponseEntity<String> {
+        return ResponseEntity(e.message, HttpStatus.BAD_REQUEST)
     }
 }

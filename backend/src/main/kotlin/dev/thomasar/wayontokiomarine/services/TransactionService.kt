@@ -36,7 +36,7 @@ class TransactionService @Autowired constructor(val transactionRepository: Trans
             in 21L..30L -> transaction.amount.multiply(BigDecimal("0.069")) // 6.9%
             in 31L..40L -> transaction.amount.multiply(BigDecimal("0.047")) // 4.7%
             in 41L..50L -> transaction.amount.multiply(BigDecimal("0.017")) // 1.7%
-            else -> throw NoApplicableFeeException("No applicable fee for $daysBetween")
+            else -> throw NoApplicableFeeException("No applicable fee for day $daysBetween")
         }
     }
 }
