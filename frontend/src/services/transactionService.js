@@ -27,7 +27,7 @@ async function createTransaction(newTransaction) {
         });
 
         if (!response.ok) {
-            throw new Error('Failed to create transaction');
+            throw new Error(`Error creating transaction: ${await response.text()}`);
         }
 
         return response.json();
