@@ -2,14 +2,13 @@ import {differenceInCalendarDays, parseISO} from "date-fns";
 
 const API_URL = `${import.meta.env.VITE_API_URL}/transactions`;
 
-async function fetchTransactions() {
+async function fetchTransactions(page = 0, size = 10) {
     try {
-        const response = await fetch(`${API_URL}`);
+        const response = await fetch(`${API_URL}?page=${page}&size=${size}`);
         if (!response.ok) {
             throw new Error('Failed to fetch transactions');
         }
-        const data = await response.json();
-        return data.content;
+        return await response.json();
     } catch (error) {
         console.error('Error fetching transactions:', error);
         throw error;

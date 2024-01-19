@@ -6,6 +6,10 @@ import {createTransaction as createTx, fetchTransactions} from "@/services/trans
 import {onMounted, ref} from "vue";
 
 const transactions = ref([]);
+const currentPage = ref(0);
+const pageSize = 10; // You can adjust this as needed
+const isLastPage = ref(true)
+
 const snackbarMessage = ref('');
 const snackbarType = ref('');
 const snackbarKey = ref(0);
@@ -19,7 +23,7 @@ function showSnackbar(message, type) {
 async function createTransaction(newTransaction) {
   try {
     await createTx(newTransaction);
-    transactions.value = await fetchTransactions();
+    await loadTransactions(0)
     showSnackbar('Transaction created successfully', 'success');
   } catch (error) {
     console.error('Error in createTransaction:', error);
@@ -27,14 +31,19 @@ async function createTransaction(newTransaction) {
   }
 }
 
-onMounted(async () => {
+async function loadTransactions(page) {
   try {
-    transactions.value = await fetchTransactions();
+    const response = await fetchTransactions(page, pageSize);
+    transactions.value = response.content; // Assuming your response has a 'content' field
+    currentPage.value = response.pageable.pageNumber
+    isLastPage.value = response.last
   } catch (error) {
-    console.error('Error on mounted:', error);
+    console.error('Error fetching transactions:', error);
     showSnackbar('Error fetching transactions', 'error');
   }
-});
+}
+
+onMounted(async () => loadTransactions(0));
 </script>
 
 
@@ -42,6 +51,12 @@ onMounted(async () => {
   <main>
     <TransactionForm @create="createTransaction"/>
     <TransactionTable :transactions="transactions"/>
+    <div class="pagination-controls">
+      <button @click="loadTransactions(currentPage - 1)" :disabled="currentPage <= 0">Previous</button>
+      <span>Page {{ currentPage + 1 }}</span>
+      <button @click="loadTransactions(currentPage + 1)" :disabled="isLastPage">Next</button>
+      <!-- Add logic to disable if on last page -->
+    </div>
     <Snackbar :message="snackbarMessage" :type="snackbarType"/>
   </main>
 </template>
@@ -66,5 +81,15 @@ main {
   justify-content: center;
 
   gap: 2em
+}
+
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pagination-controls button {
+  margin: 0 10px;
 }
 </style>
