@@ -2,45 +2,26 @@
 import TransactionForm from "@/components/TransactionForm.vue";
 import {onMounted, ref} from "vue";
 import TransactionTable from "@/components/TransactionTable.vue";
+import {createTransaction as createTx, fetchTransactions} from "@/services/transactionService.js";
 
 const transactions = ref([]);
 
-async function fetchTransactions() {
-  try {
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/transactions`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch transactions');
-    }
-
-    const data = await response.json()
-
-    transactions.value = data.content;
-  } catch (error) {
-    console.error('Error fetching transactions:', error);
-  }
-}
-
 async function createTransaction(newTransaction) {
   try {
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/transactions`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(newTransaction)
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to create transaction');
-    }
-
-    await fetchTransactions();
+    await createTx(newTransaction);
+    transactions.value = await fetchTransactions();
   } catch (error) {
-    console.error('Error creating transaction:', error);
+    console.error('Error in createTransaction:', error);
   }
 }
 
-onMounted(fetchTransactions)
+onMounted(async () => {
+  try {
+    transactions.value = await fetchTransactions();
+  } catch (error) {
+    console.error('Error on mounted:', error);
+  }
+});
 </script>
 
 <template>
